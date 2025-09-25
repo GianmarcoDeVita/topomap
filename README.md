@@ -67,14 +67,14 @@ In order to generate the topographical map of the inputs of a dataset ``dataset_
 ...
 topomap/
 └── input/		
-    └── dataset_name/			# Folder named after the dataset
-        ├── [dataset_name]_train_x.npy
-        ├── [dataset_name]_train_y.npy
-        ├── [dataset_name]_valid_x.npy	# Validation set data (if available)
-        ├── [dataset_name]_valid_y.npy	# Validation set labels (if available)
-        ├── [dataset_name]_test_x.npy
-        ├── [dataset_name]_test_y.npy
-	└── model_architecture_[dataset_name]_[model_library].[ext]
+    └── dataset_name/													# Folder named after the dataset
+        ├── [dataset_name]_train_x.npy									# Training set data (mandatory)
+        ├── [dataset_name]_train_y.npy									# Training set labels (mandatory)
+        ├── [dataset_name]_valid_x.npy									# Validation set data (if available)
+        ├── [dataset_name]_valid_y.npy									# Validation set labels (if available)
+        ├── [dataset_name]_test_x.npy									# Test set data (mandatory)
+        ├── [dataset_name]_test_y.npy									# Test set labels (mandatory)
+		└── model_architecture_[dataset_name]_[model_library].[ext] 	# DNN model architecture
 ...
 ```
 
@@ -149,21 +149,21 @@ At the end of the execution, a folder with the name ``[dataset_name]/`` will app
 ```
 ...
 topomap/
-└── dataset_name/			# Folder named after the dataset
+└── dataset_name/						# Folder named after the dataset
     ├── data/
-    │	├── embedded_data/		# Embedded data (.npy)
-    │	├── experiments/		# Pairwise accuracy by experiment (.npy)
-    │	├── experiments_clusters/	# Cluster labels computed at each experiment (.npy)
-    │	├── metrics/			# Data about cluster quality metrics (.npy)
-    │	├── trained_cluster_models/	# Fitted clustering models
-    │	├── trained_dnn_models/		# Fitted DNN cluster evaluators or weights (PyTorch)
+    │	├── embedded_data/				# Embedded data (.npy)
+    │	├── experiments/				# Pairwise accuracy by experiment (.npy)
+    │	├── experiments_clusters/		# Cluster labels computed at each experiment (.npy)
+    │	├── metrics/					# Data about cluster quality metrics (.npy)
+    │	├── trained_cluster_models/		# Fitted clustering models
+    │	├── trained_dnn_models/			# Fitted DNN cluster evaluators or weights (PyTorch)
     │	└── trained_embedding_models/	# Fitted embedding models
     ├── reports/
-    │	├── topomap_report_clustering_[dataset_name].csv 		# Cluster Accuracy
+    │	├── topomap_report_clustering_[dataset_name].csv 				# Cluster Accuracy
     │	├── topomap_report_configurations_pairwise_[dataset_name].csv 	# Cluster DNN Quality
-    │	├── topomap_report_ncomp_[dataset_name].csv 			# Embedding Components
-    │	└── topomap_report_pairwise_accuracies_[dataset_name].csv 	# Pairwise Accuracies
-    └── topographical_map/		# Selected Topographical Map Labels
+    │	├── topomap_report_ncomp_[dataset_name].csv 					# Embedding Components
+    │	└── topomap_report_pairwise_accuracies_[dataset_name].csv 		# Pairwise Accuracies
+    └── topographical_map/				# Selected Topographical Map Labels
 ...
 
 ```
