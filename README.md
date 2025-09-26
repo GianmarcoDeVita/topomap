@@ -2,7 +2,7 @@
 
 This repository contains all the code needed to generate an input topographical map with TopoMap.
 
-## 🏗️ Project structure
+## 🏗️ Project Structure
 
 The project directories are structured as follows:
 
@@ -41,7 +41,7 @@ docker run -it --name topomap_container \
   topomap_env
 ```
 
-### 🖥️ GPU (TODO)
+### 🖥️ GPU
 
 If you are using GPU, move files in ``dockerfile.gpu/`` into the ``project_root/`` folder. 
 
@@ -54,12 +54,16 @@ docker build -t topomap_env .
 2. Then, launch the container:
 
 ```bash
+docker run --gpus all -it --name topomap_container \
+  -v ./topomap:/workspace/topomap \
+  -w /workspace/topomap \
+  topomap_env
 ...
 ```
 
 ## 🐁 Launch TopoMap
 
-### 📊 Loading input data
+### 📊 Load Input Data
 
 In order to generate the topographical map of the inputs of a dataset ``dataset_name``, the training, validation (if present) and test sets must be provided as ``.npy`` arrays into the ``topomap/input/`` folder, according to the following scheme and naming:
 
@@ -80,7 +84,7 @@ topomap/
 
 Where [dataset_name] is the name of the dataset, and [model_library] can be either ``keras`` or ``pytorch``. As for Keras models, TopoMap expects a ``.json`` file containing the architecture of the model, while for PyTorch, the model code in a ``.py`` class is expected. 
 
-### 🧪 Experimental configuration
+### 🧪 Experimental Configuration
 
 TopoMap supports the following embedding and clustering algorithms:
 
@@ -111,7 +115,7 @@ In file ``topomap/topomap.py``, in function ``generate_map``, you can find the s
 
 As per performance, we suggest *CPU users* to use only ``"kmeans"`` and ``"hdbscan"`` for their experiments, depending on the size of the input dataset.
 
-### 🛠️ Compute the map
+### 🛠️ Map Computation
 
 In order to launch TopoMap, go into folder ``topomap/`` and run the following command:
 
@@ -130,7 +134,7 @@ TopoMap also accepts some extra elective arguments:
 '-r', '--regression', type=bool, default=False, 'Indicate whether the input dataset pertains a regression problem.'
 ```
 
-## 🎬 Launch a demo run
+## 🎬 Launch a Demo Run
 
 As an example, TopoMap is released along with a couple of examples, pertaining to the MNIST/CIFAR-10 datasets and models implemented in Keras and PyTorch.
 
@@ -142,7 +146,7 @@ python run_demo.py [dataset_name] [model_package]
 
 Where ``[dataset_name]`` can be either ``mnist`` or ``cifar10`` and ``[model_package]`` can be either ``keras`` or ``pytorch``.
 
-## 🗺️ Get the map
+## 🗺️ Get the Map
 
 At the end of the execution, a folder with the name ``[dataset_name]/`` will appear in the ``topomap/`` directory and will be structured as follows:
 
