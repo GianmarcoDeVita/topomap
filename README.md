@@ -166,12 +166,12 @@ topomap/
     │	├── topomap_report_configurations_pairwise_[dataset_name].csv 	# Cluster DNN Quality
     │	├── topomap_report_ncomp_[dataset_name].csv 					# Embedding Components
     │	└── topomap_report_pairwise_accuracies_[dataset_name].csv 		# Pairwise Accuracies
-    └── topographical_map/				# Selected Topographical Map Labels
+    └── topographical_map/				# Selected Topographical Map Labels and Visual Map Plot
 ...
 
 ```
 
-The labels of the final topographical map generated and selected by TopoMap, can be found in subfolder ``topographical_map/``.
+The labels of the final topographical map generated and selected by TopoMap, along with a ``.pdf`` visualisation of the map, can be found in subfolder ``topographical_map/``.
 
 ### References:
 
