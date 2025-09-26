@@ -58,7 +58,6 @@ docker run --gpus all -it --name topomap_container \
   -v ./topomap:/workspace/topomap \
   -w /workspace/topomap \
   topomap_env
-...
 ```
 
 ## 🐁 Launch TopoMap
