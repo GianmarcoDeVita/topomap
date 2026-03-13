@@ -61,7 +61,7 @@ def plot_topomap(data_name, configuration, set_type, selected_classes, is_data_i
         # Transpose from (N, C, H, W) -> (N, H, W, C)
         original_test_set = np.transpose(original_test_set, (0, 2, 3, 1))
 
-    if clustering == "kmeans" or clustering == "birch":
+    if clustering == "kmeans" or clustering == "birch" or clustering == "agglomerative":
         clusters_labels_test = np.load(os.path.join(data_name, "data", "experiments_clusters",
                                                     ".".join(("_".join((data_name, "test", embedding, clustering,
                                                                         str(num_clusters), "experiment",

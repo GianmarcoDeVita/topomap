@@ -1,6 +1,7 @@
 import statistics
 
-from sklearn.cluster import MiniBatchKMeans, Birch, AffinityPropagation
+from sklearn.cluster import MiniBatchKMeans, Birch, AffinityPropagation, AgglomerativeClustering
+from sklearn.neighbors import NearestCentroid
 import hdbscan
 import joblib
 import keras
@@ -62,6 +63,34 @@ def birch(data_train, data_test, num_clusters):
     birch_model.dummy_leaf_ = None
 
     return cluster_labels_train, cluster_labels_test, birch_model
+
+
+# Use AgglomerativeClustering as clustering method
+def agglomerative(data_train, data_test, num_clusters):
+
+    # Data for training
+    # Reshape training data to make it suitable for K-Means algorithm
+    data_train = np.asarray(data_train)
+    data_train = data_train.reshape((len(data_train), np.prod(data_train.shape[1:])))
+
+    # Data for test
+    # Reshape test data to make it suitable for K-Means algorithm
+    data_test = np.asarray(data_test)
+    data_test = data_test.reshape((len(data_test), np.prod(data_test.shape[1:])))
+
+    # Fit-predict from an Agglomerative model
+    agglomerative_model = AgglomerativeClustering(n_clusters=num_clusters)
+    agglomerative_labels = agglomerative_model.fit_predict(data_train)
+
+    # Fit a predictive model based on Agglomerative Clustering labeling
+    predictive_model = NearestCentroid()
+    predictive_model.fit(data_train, agglomerative_labels)
+
+    # Compute cluster labels
+    cluster_labels_train = agglomerative_labels   # Cluster labels for training set
+    cluster_labels_test = predictive_model.predict(data_test) # Cluster labels for test set
+
+    return cluster_labels_train, cluster_labels_test, predictive_model
 
 
 # Use AffinityPropagation as clustering method
@@ -136,7 +165,7 @@ def progress_bar_experiments(current_experiment, total_experiments):
 
 
 # Perform clustering to find K clusters and analyze the quality of this clustering
-def analyze_num_of_clusters(data_name, data_train, data_test, num_clusters, experiment, test_set_labels, embedding="none", clustering="kmeans"):
+def analyze_num_of_clusters(data_name, data_train, data_test, num_clusters, experiment, train_set_labels, test_set_labels, embedding="none", clustering="kmeans"):
 
     clusters_labels_name = "_".join((str(embedding), str(clustering), str(num_clusters), "experiment", ".".join((str(experiment), "npy"))))
     clusters_train_labels_loc = os.path.join(data_name, "data", "experiments_clusters", ("_".join((data_name, "train", clusters_labels_name))))
@@ -147,6 +176,8 @@ def analyze_num_of_clusters(data_name, data_train, data_test, num_clusters, expe
         # Apply clustering
         if clustering == "birch":
             y_train_clust, y_test_clust, model = birch(data_train, data_test, num_clusters)
+        elif clustering == "agglomerative":
+            y_train_clust, y_test_clust, model = agglomerative(data_train, data_test, num_clusters)
         else:
             y_train_clust, y_test_clust, model = kmeans(data_train, data_test, num_clusters)
 
@@ -181,6 +212,7 @@ def analyze_num_of_clusters(data_name, data_train, data_test, num_clusters, expe
         save_metric.close()
 
     else:
+        y_train_clust = load_pseudolabels(data_name, experiment, embedding, clustering, num_clusters, "train")
         y_test_clust = load_pseudolabels(data_name, experiment, embedding, clustering, num_clusters, "test")
 
         # Load metrics
@@ -196,14 +228,21 @@ def analyze_num_of_clusters(data_name, data_train, data_test, num_clusters, expe
         with open(metric_loc, 'rb') as f:
             ch_index = pickle.load(f)
 
-    length = len(test_set_labels)
-    labels = np.zeros(length)
-    for i in range(0, num_clusters):
-        mask = y_test_clust == i
-        labels[mask] = mode(test_set_labels[mask])[0]
-    corresponding_cluster_labels = labels
+    # Build mapping on training set
+    cluster_to_label = {}
 
-    cluster_accuracy = accuracy_score(test_set_labels, corresponding_cluster_labels)
+    for i in range(num_clusters):
+        mask = y_train_clust == i
+        if np.sum(mask) > 0:  # avoid empty clusters
+            cluster_to_label[i] = mode(train_set_labels[mask], keepdims=True)[0][0]
+
+    # Apply mapping to test set
+    corresponding_test_labels = np.zeros(len(y_test_clust))
+
+    for cluster_id, class_label in cluster_to_label.items():
+        corresponding_test_labels[y_test_clust == cluster_id] = class_label
+
+    cluster_accuracy = accuracy_score(test_set_labels, corresponding_test_labels)
 
     return silhouette, db_index, ch_index, cluster_accuracy
 
@@ -248,6 +287,7 @@ def find_K_clusters(data_name, embedding, clustering, data_train_embedded, data_
                                                                                       data_train_embedded,
                                                                                       data_test_embedded,
                                                                                       current_k, exp,
+                                                                                      loaded_train_labels,
                                                                                       loaded_test_labels,
                                                                                       embedding, clustering)
 
@@ -283,7 +323,7 @@ def find_K_clusters(data_name, embedding, clustering, data_train_embedded, data_
         print("-------------------------------------------------------------------------")
 
         if avg_dev > 0.001:
-            # If the average of the last two derivatives is not lower than the tolerance threshold, add a new value of K.
+            # If the average of the last two derivatives is not lower than the tolerance threshold, add a new value of K
             prev_k_acc = this_k_acc
             prev_k = current_k
             Ks.append(current_k + increment)

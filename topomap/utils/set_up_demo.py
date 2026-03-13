@@ -1,6 +1,5 @@
 import numpy as np
 import os
-import tensorflow as tf
 import torch
 from keras.datasets import mnist, cifar10
 from keras import backend as K, Sequential

@@ -41,30 +41,37 @@ def initialize_directories(data_name):
 # Clear data space to make the code suitable for re-runs
 def clear_directories(data_name):
 
-    # Clear files in subfolders inside the main data folder
+    # List all files in the data directory
     for subdirectory in data_subfolders_names:
         folder_path = os.path.join(data_name, data_folder_name, subdirectory)
-        if os.path.isdir(folder_path):  # Check if folder exists
-            for filename in os.listdir(folder_path):
-                file_path = os.path.join(folder_path, filename)
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
+        if not os.path.exists(folder_path):
+            continue
+        for filename in os.listdir(folder_path):
+            file_path = os.path.join(folder_path, filename)
 
-    # Clear files in reports directory
+            # Check if it is a file (not a subdirectory)
+            if os.path.isfile(file_path):
+                os.remove(file_path)  # Remove the file
+
+    # Remove files in reports directory
     folder_path = os.path.join(data_name, reports_folder_name)
-    if os.path.isdir(folder_path):  # Check if folder exists
+    if os.path.exists(folder_path):
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
-            if os.path.isfile(file_path):
-                os.remove(file_path)
 
-    # Clear files in topographical_map directory
+            # Check if it is a file (not a subdirectory)
+            if os.path.isfile(file_path):
+                os.remove(file_path)  # Remove the file
+
+    # Remove files in topographical_map directory
     folder_path = os.path.join(data_name, topographical_map_folder_name)
-    if os.path.isdir(folder_path):  # Check if folder exists
+    if os.path.exists(folder_path):
         for filename in os.listdir(folder_path):
             file_path = os.path.join(folder_path, filename)
+
+            # Check if it is a file (not a subdirectory)
             if os.path.isfile(file_path):
-                os.remove(file_path)
+                os.remove(file_path)  # Remove the file
 
     return None
 
