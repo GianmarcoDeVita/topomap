@@ -171,6 +171,21 @@ topomap/
 
 The labels of the final topographical map generated and selected by TopoMap, can be found in subfolder ``topographical_map/``.
 
+### Citation
+
+If you use this tool in your research, please cite the following paper:
+
+```bibtex
+@INPROCEEDINGS{11600505,
+  author={{De Vita}, Gianmarco and Humbatova, Nargiz and Tonella, Paolo},
+  booktitle={2026 IEEE International Conference on Software Testing, Verification and Validation (ICST)}, 
+  title={TopoMap: Automated Topographical Mapping of the Deep Learning Input Space}, 
+  year={2026},
+  pages={319--323},
+  keywords={Modeling;Testing;Labeling;Printing;Training;Conferences;Deep learning;Learning (artificial intelligence);Machine learning;Accuracy;Software testing;Deep learning testing;Test input clustering},
+  doi={10.1109/ICST69053.2026.00049}}
+```
+
 ### References:
 
 [1] De Vita, G., Humbatova, N., & Tonella, P. (2025). TopoMap: A Feature-based Semantic Discriminator of the Topographical Regions in the Test Input Space. *arXiv preprint arXiv:2509.03242*. [[arXiv](https://arxiv.org/abs/2509.03242)]
